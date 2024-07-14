@@ -1,0 +1,2 @@
+# FinancialAssistant
+Full Stack project
