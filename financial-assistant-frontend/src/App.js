@@ -8,7 +8,7 @@ function App() {
 
   const sendMessage = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/api/message', { message });
+      const response = await axios.post('https://financialassistant.onrender.com/api/message', { message });
       setAnswer(response.data.answer);
     } catch (error) {
       console.error('Error sending message:', error);
