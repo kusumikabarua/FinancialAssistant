@@ -1,43 +1,19 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import './App.css';
-
+import React from "react";
+import ChatDashboard from "./components/ChatDashboard/ChatDashboard";
+import Register from "./components/Auth/Register/Register";
+import Login from "./components/Auth/Login/Login";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 function App() {
-  const [message, setMessage] = useState('');
-  const [answer, setAnswer] = useState('');
-
-  const sendMessage = async () => {
-    try {
-      const response = await axios.post('https://financialassistant.onrender.com/api/message', { message });
-      setAnswer(response.data.answer);
-    } catch (error) {
-      console.error('Error sending message:', error);
-    }
-  };
-
   return (
-    <div className="App">
-      <h1>Financial Assistant</h1>
-      <div className="chat-container">
-        <div className="chat-box">
-          {answer && <div className="answer">{answer}</div>}
-        </div>
-        <div className="input-container">
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Ask a question..."
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                sendMessage();
-              }
-            }}
-          />
-          <button onClick={sendMessage}>Send</button>
-        </div>
-      </div>
-    </div>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<ChatDashboard />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 

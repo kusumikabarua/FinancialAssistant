@@ -1,47 +1,26 @@
+require("dotenv").config({path :"src/.env"});
+const mongoose = require("mongoose");
 const express = require("express");
-require("dotenv").config({ path: "src/.env" });
-const axios = require("axios");
-const bodyParser = require("body-parser");
 const app = express();
-const port = 4000;
-const cors = require("cors");
+const PORT = process.env.PORT || 4000;
+const authRoutes = require("./routes/authRoutes");
+const chatRoutes = require("./routes/chatRoutes");
+
+const cors =require("cors");
 app.use(cors());
-
-app.use(bodyParser.json());
-
-// Endpoint to handle incoming messages from frontend
-app.post("/api/message", async (req, res) => {
-  const { message } = req.body;
+app.use(express.json());
 
 
-  // Replace with your ChatGPT Assistant API endpoint and API key
-  const apiUrl = "https://api.openai.com/v1/chat/completions";
-  const apiKey = process.env.YOUR_OPENAI_API_KEY;
+app.use("/api/chat",chatRoutes);
+app.use("/api/users",authRoutes);
 
-  try {
-    const response = await axios.post(
-      apiUrl,
-      {
-        "model": "gpt-3.5-turbo",
-        "messages": [{"role": "user", "content": message}],
-        "max_tokens": 10
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-      }
-    );
-
-    const answer = response.data.choices[0].message.content.trim();
-    res.json({ answer });
-  } catch (error) {
-    console.error("Error fetching response from ChatGPT:", error);
-    res.status(500).json({ error: "Failed to fetch response from ChatGPT" });
-  }
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.log("Couldnt connect to MongoDB",err));
+app.listen(PORT, (req, res) => {
+  console.log("Server Listening as port 4000");
 });
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.get("/", (req, res) => {
+  res.send("Backend server is running");
 });
